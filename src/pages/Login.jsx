@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
+function isDarkMode() {
+  try {
+    return document.documentElement.classList.contains("dark");
+  } catch (e) {
+    return false;
+  }
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,6 +16,14 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(isDarkMode());
+    const handleDarkModeToggle = () => setIsDark(isDarkMode());
+    window.addEventListener("darkModeToggled", handleDarkModeToggle);
+    return () => window.removeEventListener("darkModeToggled", handleDarkModeToggle);
+  }, []);
 
   const validateEmail = (email) => {
     return String(email)
@@ -34,20 +50,19 @@ export default function Login() {
     setTimeout(() => {
       setLoading(false);
       window.location.href = "/dashboard";
-
-
     }, 1500);
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div style={styles.page}>
       <div style={styles.container}>
 
+        {/* HEADER TEXT */}
         <h1 style={styles.title}>Welcome Back!</h1>
         <p style={styles.subtitle}>Login to continue your vendor journey</p>
 
+        {/* FORM */}
         <form style={styles.form} onSubmit={handleLogin}>
-
           {error && <p style={styles.error}>{error}</p>}
 
           <input
@@ -75,6 +90,7 @@ export default function Login() {
             </span>
           </div>
 
+          {/* REMEMBER ME + FORGOT */}
           <div style={styles.rowBetween}>
             <label style={styles.rememberLabel}>
               <input
@@ -85,26 +101,36 @@ export default function Login() {
               <span style={{ marginLeft: 6 }}>Remember Me</span>
             </label>
 
-            <span style={styles.forgot}>Forgot Password?</span>
+            <span
+  style={styles.forgot}
+  onClick={() => (window.location.href = "/reset-password")}
+>
+  Forgot Password?
+</span>
+
           </div>
 
+          {/* LOGIN BUTTON */}
           <button style={styles.button} disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
+        {/* OR DIVIDER */}
         <div style={styles.dividerContainer}>
           <div style={styles.line}></div>
           <span style={styles.or}>OR</span>
           <div style={styles.line}></div>
         </div>
 
+        {/* SOCIAL LOGIN */}
         <div style={styles.socialRow}>
           <div style={styles.socialBox}>f</div>
           <div style={styles.socialBox}>G</div>
           <div style={styles.socialBox}></div>
         </div>
 
+        {/* FOOTER */}
         <p style={styles.bottomText}>
           Don’t have an account?{" "}
           <Link to="/register" style={styles.link}>
@@ -116,37 +142,70 @@ export default function Login() {
   );
 }
 
-/* ---------------- STYLES ------------------ */
+/* ---------------- THEME & STYLES ------------------ */
+
+const getLightTheme = () => ({
+  primary: "#FF8A00",
+  primaryDark: "#E87C00",
+  primarySoft: "#FFB267",
+  success: "#00B34A",
+  white: "#FFFFFF",
+  bg: "#F7F8FC",
+  text: "#1A1A1A",
+  muted: "#7A8593",
+  border: "#EBEBEB",
+  cardShadow: "rgba(16, 24, 40, 0.08)",
+});
+
+const getDarkTheme = () => ({
+  primary: "#FF8A00",
+  primaryDark: "#E87C00",
+  primarySoft: "#FFB267",
+  success: "#00B34A",
+  white: "#FFFFFF",
+  bg: "#0D1117",
+  text: "#E8E8E8",
+  muted: "#A8B0BD",
+  border: "#30363D",
+  cardShadow: "rgba(0, 0, 0, 0.3)",
+});
 
 const styles = {
-  wrapper: {
-    width: "100%",
-    height: "100vh",
-    background: "#fafafa",
+  page: {
+    background: currentTheme.bg,
+    minHeight: "100vh",
+    padding: "20px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
   },
 
   container: {
     width: "100%",
-    maxWidth: "420px",
-    background: "#fff",
-    padding: "40px 30px",
+    maxWidth: "440px",
+    background: isDark ? "#161B22" : currentTheme.white,
+    padding: "40px 28px",
     borderRadius: "20px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+    boxShadow: `0 4px 12px ${currentTheme.cardShadow}`,
+    border: `1px solid ${currentTheme.border}`,
   },
 
   title: {
-    fontSize: "28px",
-    fontWeight: "700",
-    marginBottom: "4px",
+    fontSize: "32px",
+    fontWeight: "800",
+    marginBottom: "8px",
+    color: currentTheme.text,
+    textAlign: "center",
+    letterSpacing: "-0.5px",
   },
 
   subtitle: {
-    color: "#555",
-    marginBottom: "25px",
+    textAlign: "center",
+    color: currentTheme.muted,
+    marginBottom: "32px",
+    fontSize: "15px",
+    fontWeight: "500",
   },
 
   form: {
@@ -155,69 +214,88 @@ const styles = {
 
   input: {
     width: "100%",
-    padding: "14px",
-    marginBottom: "15px",
-    border: "1px solid #ddd",
+    padding: "12px 14px",
+    marginBottom: "14px",
+    border: `1px solid ${currentTheme.border}`,
     borderRadius: "12px",
     fontSize: "15px",
+    backgroundColor: isDark ? "#0D1117" : currentTheme.white,
+    color: currentTheme.text,
+    outline: "none",
+    boxShadow: "none",
+    boxSizing: "border-box",
+    lineHeight: "1.5",
+    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
   },
 
   passwordContainer: {
     position: "relative",
-    width: "100%",
-    marginBottom: "15px",
+    marginBottom: "14px",
   },
 
   passwordInput: {
     width: "100%",
-    padding: "14px",
-    paddingRight: "60px",
-    border: "1px solid #ddd",
+    padding: "12px 14px",
+    paddingRight: "80px",
+    border: `1px solid ${currentTheme.border}`,
     borderRadius: "12px",
+    backgroundColor: isDark ? "#0D1117" : currentTheme.white,
     fontSize: "15px",
+    outline: "none",
+    boxSizing: "border-box",
+    boxShadow: "none",
+    color: currentTheme.text,
+    lineHeight: "1.5",
+    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
   },
 
   showHide: {
     position: "absolute",
-    right: "12px",
+    right: "16px",
     top: "50%",
     transform: "translateY(-50%)",
-    color: "#ff8a00",
+    color: currentTheme.primary,
     cursor: "pointer",
     fontWeight: "600",
+    fontSize: "13px",
   },
 
   rowBetween: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "18px",
+    marginBottom: "20px",
+    gap: "10px",
   },
 
   rememberLabel: {
     fontSize: "14px",
     display: "flex",
     alignItems: "center",
+    color: currentTheme.text,
+    fontWeight: "500",
   },
 
   forgot: {
     fontSize: "14px",
-    color: "#ff8a00",
+    color: currentTheme.primary,
     cursor: "pointer",
-    fontWeight: "600",
+    fontWeight: "700",
   },
 
   button: {
     width: "100%",
-    padding: "14px",
-    background: "#ff8a00",
-    color: "white",
+    padding: "12px",
+    background: `linear-gradient(135deg, ${currentTheme.primaryDark} 0%, ${currentTheme.primary} 100%)`,
+    color: currentTheme.white,
     border: "none",
-    borderRadius: "50px",
+    borderRadius: "12px",
     fontSize: "16px",
-    fontWeight: "600",
+    fontWeight: "700",
     cursor: "pointer",
-    marginBottom: "25px",
+    marginBottom: "24px",
+    boxShadow: `0 4px 12px ${currentTheme.cardShadow}`,
+    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
   },
 
   dividerContainer: {
@@ -229,54 +307,60 @@ const styles = {
   line: {
     flex: 1,
     height: "1px",
-    background: "#ddd",
+    background: currentTheme.border,
   },
 
   or: {
-    margin: "0 10px",
-    color: "#888",
-    fontSize: "14px",
+    margin: "0 12px",
+    color: currentTheme.muted,
+    fontSize: "13px",
+    fontWeight: "600",
   },
 
   socialRow: {
     display: "flex",
     justifyContent: "center",
-    gap: "15px",
-    marginBottom: "25px",
+    gap: "16px",
+    marginBottom: "24px",
   },
 
   socialBox: {
-    width: "45px",
-    height: "45px",
-    borderRadius: "12px",
-    background: "#f5f5f5",
+    width: "52px",
+    height: "52px",
+    background: isDark ? "#161B22" : currentTheme.white,
+    borderRadius: "14px",
+    border: `1.5px solid ${currentTheme.border}`,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: "22px",
+    fontSize: "24px",
     cursor: "pointer",
-    border: "1px solid #ddd",
+    transition: "all 0.2s ease",
+    boxShadow: `0 4px 12px ${currentTheme.cardShadow}`,
   },
 
   bottomText: {
     textAlign: "center",
-    fontSize: "14px",
+    fontSize: "15px",
+    color: currentTheme.muted,
+    fontWeight: "500",
   },
 
   link: {
-    color: "#05a502",
-    fontWeight: "600",
-    cursor: "pointer",
+    color: currentTheme.primary,
+    fontWeight: "800",
     textDecoration: "none",
   },
 
   error: {
-    background: "#ffd2d2",
-    color: "#b30000",
-    padding: "10px",
-    borderRadius: "10px",
+    background: isDark ? "rgba(255, 138, 0, 0.15)" : `${currentTheme.primarySoft}20`,
+    color: isDark ? "#FFB267" : currentTheme.primaryDark,
+    padding: "12px 16px",
+    borderRadius: "12px",
     textAlign: "center",
-    marginBottom: "15px",
+    marginBottom: "18px",
     fontSize: "14px",
+    fontWeight: "600",
+    border: `1px solid ${isDark ? "#FFB267" : currentTheme.primarySoft}`,
   },
 };
