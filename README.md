@@ -1,319 +1,188 @@
-# Vendor App Backend API
+# Vendor App - Full Stack Application
 
-Backend API for the Vendor Management PWA - built with Node.js, Express, PostgreSQL, and Redis.
+A complete **vendor management PWA** with React frontend and Node.js backend API.
 
-## Features
+## 📁 Project Structure
 
-- ✅ **JWT Authentication** - Secure login with access & refresh tokens
-- ✅ **Order Management** - List, filter, and update orders with status tracking
-- ✅ **Dashboard Analytics** - Revenue stats, earnings charts, order counts
-- ✅ **Rate Limiting** - Redis-powered rate limiting for API protection
-- ✅ **Input Validation** - Zod schema validation for all requests
-- ✅ **Error Handling** - Centralized error handling with consistent responses
-- ✅ **Database ORM** - Prisma for type-safe database access
-- 🚧 **Profile Management** - Coming soon
-- 🚧 **Real-time Notifications** - Socket.io integration (coming soon)
-- 🚧 **Cart Uploads** - Cloudinary image uploads (coming soon)
+```
+Vendor_App/
+├── frontend/          # React PWA (Vite + React 18)
+│   ├── src/          # React components & pages
+│   ├── public/       # Static assets
+│   ├── package.json  # Frontend dependencies
+│   └── vite.config.js # Vite configuration
+│
+├── backend/          # Node.js API Server
+│   ├── src/          # Express app, routes, controllers
+│   ├── prisma/       # Database schema & migrations
+│   ├── package.json  # Backend dependencies
+│   └── README.md     # Backend documentation
+│
+├── .env             # Backend environment variables
+└── README.md        # This file
+```
 
-## Tech Stack
+## 🚀 Quick Start
 
-- **Runtime**: Node.js 20+
-- **Framework**: Express.js
-- **Database**: PostgreSQL 15 (via Prisma ORM)
-- **Cache**: Redis 7
-- **Auth**: JWT (jsonwebtoken + bcryptjs)
-- **Validation**: Zod
-- **Security**: Helmet, CORS, express-rate-limit
-
-## Prerequisites
-
-- Node.js 20 or higher
-- Docker & Docker Compose (for local PostgreSQL and Redis)
-- npm or yarn
-
-## Quick Start
-
-### 1. Clone and Install
+### 1. Install Dependencies
 
 ```bash
-cd /c/projects/vendor-app-backend
+# Install frontend dependencies
+cd frontend
+npm install
+
+# Install backend dependencies
+cd ../backend
 npm install
 ```
 
-### 2. Start Database Services
+### 2. Setup Backend Database
 
 ```bash
-# Start PostgreSQL and Redis with Docker Compose
-docker-compose up -d
+cd backend
 
-# Check services are running
-docker-compose ps
-```
-
-### 3. Configure Environment
-
-Update `.env` file with your settings (or use defaults for development):
-
-```env
-DATABASE_URL="postgresql://vendoruser:vendorpass123@localhost:5432/vendordb?schema=public"
-REDIS_URL="redis://localhost:6379"
-JWT_SECRET="your-secret-key-change-in-production"
-JWT_REFRESH_SECRET="your-refresh-secret-change-in-production"
-PORT=3000
-NODE_ENV="development"
-```
-
-### 4. Run Database Migrations
-
-```bash
 # Generate Prisma client
 npm run prisma:generate
 
-# Run migrations to create database tables
+# Run database migrations
 npm run prisma:migrate
-
-# (Optional) Open Prisma Studio to view database
-npm run prisma:studio
 ```
 
-### 5. Start Development Server
+### 3. Start Development Servers
 
+**Terminal 1 - Backend:**
 ```bash
+cd backend
 npm run dev
+# Starts on http://localhost:3000
 ```
 
-Server will start on `http://localhost:3000`
-
-## API Documentation
-
-### Base URL
-
-```
-http://localhost:3000/v1
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+# Starts on http://localhost:5173
 ```
 
-### Authentication Endpoints
+## ✨ Features
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | Register new vendor |
-| POST | `/auth/login` | Login user |
-| POST | `/auth/logout` | Logout user |
-| POST | `/auth/refresh-token` | Refresh access token |
-| POST | `/auth/send-otp` | Send OTP to phone |
-| POST | `/auth/verify-otp` | Verify OTP code |
-| POST | `/auth/reset-password` | Reset password |
+### Frontend (React PWA)
+- 📱 **Mobile-first design** - Optimized for vendor mobile usage
+- 🗺️ **Interactive maps** - Leaflet integration for location tracking
+- 📊 **Real-time dashboard** - Earnings, orders, analytics
+- 🔐 **Complete authentication** - Login, register, password reset
+- 🛒 **Order management** - Accept, track, complete orders
+- 📸 **Cart uploads** - Camera integration for inventory photos
+- 🔔 **Notifications** - Push notification support
+- ⚙️ **Settings & profile** - Dark mode, preferences
 
-### Orders Endpoints
+### Backend (Node.js API)
+- 🔑 **JWT Authentication** - Secure login with refresh tokens
+- 📊 **Orders API** - Complete CRUD with status tracking
+- 📈 **Dashboard Analytics** - Revenue, earnings, order stats
+- 🗄️ **SQLite Database** - Prisma ORM, zero-config development
+- 🛡️ **Security** - Rate limiting, validation, CORS
+- 📝 **API Documentation** - Comprehensive endpoint docs
+- 🚀 **Production ready** - Error handling, logging
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/orders` | List orders with filters | ✅ |
-| GET | `/orders/:id` | Get single order | ✅ |
-| PATCH | `/orders/:id/status` | Update order status | ✅ |
-| GET | `/orders/pending` | Get pending orders | ✅ |
-| GET | `/orders/history` | Get order history | ✅ |
-| POST | `/orders` | Create order (test only) | ✅ |
+## 📚 Documentation
 
-### Dashboard Endpoints
+- **Frontend Setup**: See `frontend/README.md`
+- **Backend API**: See `backend/README.md`
+- **API Endpoints**: Full documentation in backend README
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/dashboard/stats` | Get dashboard statistics | ✅ |
-| GET | `/dashboard/earnings` | Get earnings chart data | ✅ |
-| GET | `/dashboard/recent-orders` | Get recent orders | ✅ |
-| GET | `/dashboard/notifications` | Get notifications | ✅ |
+## 🛠️ Tech Stack
 
-## Example API Requests
+**Frontend:**
+- React 18 + Vite
+- React Router (routing)
+- Leaflet (maps)
+- PWA capabilities
 
-### Register
+**Backend:**
+- Node.js + Express
+- Prisma ORM + SQLite
+- JWT authentication
+- Zod validation
+- Rate limiting
+
+## 🌐 API Endpoints
+
+Base URL: `http://localhost:3000/v1`
+
+### Auth
+- `POST /auth/register` - Register vendor
+- `POST /auth/login` - Login
+- `POST /auth/logout` - Logout
+- `POST /auth/refresh-token` - Refresh token
+
+### Orders (Auth Required)
+- `GET /orders` - List orders with filters
+- `PATCH /orders/:id/status` - Update order status
+- `GET /orders/pending` - Pending orders
+
+### Dashboard (Auth Required)
+- `GET /dashboard/stats` - Today's revenue & order count
+- `GET /dashboard/earnings` - Earnings chart data
+- `GET /dashboard/recent-orders` - Recent orders
+
+## 🧪 Testing
 
 ```bash
+# Test backend API health
+curl http://localhost:3000/health
+
+# Register a test vendor
 curl -X POST http://localhost:3000/v1/auth/register \
   -H "Content-Type: application/json" \
-  -d '{
-    "username": "john_vendor",
-    "email": "john@example.com",
-    "phone": "9876543210",
-    "password": "password123"
-  }'
+  -d '{"username":"test","email":"test@example.com","phone":"9876543210","password":"test123"}'
 ```
 
-### Login
+## 🚀 Deployment
 
+**Frontend**: Deploy to Vercel/Netlify
 ```bash
-curl -X POST http://localhost:3000/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "password123",
-    "remember": true
-  }'
+cd frontend
+npm run build
+# Deploy dist/ folder
 ```
 
-### Get Orders (with authentication)
-
+**Backend**: Deploy to Railway/Render
 ```bash
-curl -X GET "http://localhost:3000/v1/orders?status=All&search=&page=1" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+cd backend
+# Deploy with auto-detected Node.js
 ```
 
-### Update Order Status
+## 🔧 Environment Setup
 
-```bash
-curl -X PATCH http://localhost:3000/v1/orders/ORDER_ID/status \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"status": "ACCEPTED"}'
+Copy `.env.example` to `.env` and configure:
+
+```env
+DATABASE_URL="file:./dev.db"          # SQLite for development
+JWT_SECRET="your-secret-key"          # Change in production
+FRONTEND_URL="http://localhost:5173"  # For CORS
+PORT=3000
 ```
 
-### Get Dashboard Stats
+## 📞 Support
 
-```bash
-curl -X GET http://localhost:3000/v1/dashboard/stats \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-```
+- **Frontend Issues**: Check `frontend/src/pages/` for component code
+- **API Issues**: Check `backend/src/routes/` for endpoint logic
+- **Database**: Use `npm run prisma:studio` to view data
 
-## Response Format
+## 🤝 Contributing
 
-### Success Response
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-```json
-{
-  "success": true,
-  "data": { ... },
-  "message": "Operation successful",
-  "timestamp": "2026-03-28T10:30:00Z"
-}
-```
+## 📄 License
 
-### Error Response
+This project is licensed under the ISC License.
 
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid email format",
-    "details": [
-      { "field": "email", "issue": "must be a valid email" }
-    ]
-  },
-  "timestamp": "2026-03-28T10:30:00Z"
-}
-```
+---
 
-## Scripts
-
-```bash
-npm run dev              # Start development server with nodemon
-npm start                # Start production server
-npm run prisma:migrate   # Run database migrations
-npm run prisma:generate  # Generate Prisma client
-npm run prisma:studio    # Open Prisma Studio GUI
-```
-
-## Project Structure
-
-```
-vendor-app-backend/
-├── src/
-│   ├── config/          # Configuration (database, Redis, Cloudinary)
-│   ├── middleware/      # Express middleware (auth, validation, rate limiting)
-│   ├── routes/          # API route definitions
-│   ├── controllers/     # Request handlers
-│   ├── services/        # Business logic
-│   ├── utils/           # Utility functions (JWT, helpers)
-│   ├── app.js           # Express app setup
-│   └── server.js        # Server entry point
-├── prisma/
-│   ├── schema.prisma    # Database schema
-│   └── migrations/      # Database migrations
-├── .env                 # Environment variables
-├── docker-compose.yml   # Docker services (PostgreSQL, Redis)
-└── package.json
-```
-
-## Environment Variables
-
-See `.env.example` for all available configuration options.
-
-**Required:**
-- `DATABASE_URL` - PostgreSQL connection string
-- `REDIS_URL` - Redis connection string
-- `JWT_SECRET` - Secret key for access tokens
-- `JWT_REFRESH_SECRET` - Secret key for refresh tokens
-
-**Optional (for production):**
-- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
-- `FCM_PROJECT_ID`, `FCM_PRIVATE_KEY`, `FCM_CLIENT_EMAIL`
-
-## Testing
-
-### Health Check
-
-```bash
-curl http://localhost:3000/health
-```
-
-Expected response:
-```json
-{
-  "status": "ok",
-  "timestamp": "2026-03-28T...",
-  "environment": "development"
-}
-```
-
-## Troubleshooting
-
-### Port 3000 already in use
-
-```bash
-# Find and kill process on port 3000
-lsof -ti:3000 | xargs kill -9
-```
-
-### Cannot connect to PostgreSQL
-
-```bash
-# Check if Docker containers are running
-docker-compose ps
-
-# Restart containers
-docker-compose restart
-
-# Check PostgreSQL logs
-docker-compose logs postgres
-```
-
-### Prisma migration errors
-
-```bash
-# Reset database (WARNING: deletes all data)
-npx prisma migrate reset
-
-# Or manually drop database and recreate
-docker-compose down -v
-docker-compose up -d
-npm run prisma:migrate
-```
-
-## Next Steps
-
-- [ ] Implement profile management endpoints
-- [ ] Add WebSocket support for real-time order notifications
-- [ ] Integrate Cloudinary for image uploads
-- [ ] Add SMS OTP integration (Twilio)
-- [ ] Add push notifications (Firebase FCM)
-- [ ] Write unit and integration tests
-- [ ] Deploy to Railway/Render
-
-## License
-
-ISC
-
-## Support
-
-For issues or questions, please create an issue in the repository.
+**Built with ❤️ using React + Node.js**
+*Ready for production deployment* 🚀
